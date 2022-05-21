@@ -18,7 +18,7 @@ def get_schoolkid_id():
         schoolkid_id = schoolkids[int(input_index)-1].id
     else:
         print("Такого ученика не нашлось в базе,попробуйте еще раз")
-        get_schoolkid_id()
+        schoolkid_id = get_schoolkid_id()
     return schoolkid_id
 
 
@@ -59,15 +59,13 @@ def get_random_commendation():
 
 
 def get_random_subject(schoolkid):
-    subject = Subject.objects.filter(year_of_study=schoolkid.year_of_study)
-    random_subject_index = random.randint(0, len(subject))
-    return str(subject[random_subject_index].title)
+    subjects = Subject.objects.filter(year_of_study=schoolkid.year_of_study)
+    return random.choice(subjects).title
 
 
 def fix_marks(schoolkid):
     schoolkid_marks = Mark.objects.filter(schoolkid=schoolkid, points__in=['2', '3'])
-    for index, mark in enumerate(schoolkid_marks):
-        mark = schoolkid_marks[index]
+    for mark in schoolkid_marks:
         mark.points = '5'
         mark.save()
 
@@ -84,14 +82,13 @@ def create_commendation(schoolkid):
         year_of_study=schoolkid.year_of_study,
         group_letter=schoolkid.group_letter,
     )
-    random_lesson = random.randint(0, len(lessons))
-    lesson = lessons[random_lesson]
+    random_lesson = random.choice(lessons)
     Commendation.objects.create(
         text=get_random_commendation(),
-        created=lesson.date,
+        created=random_lesson.date,
         schoolkid=schoolkid,
-        subject=lesson.subject,
-        teacher=lesson.teacher
+        subject=random_lesson.subject,
+        teacher=random_lesson.teacher
     )
 
 
