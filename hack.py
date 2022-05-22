@@ -1,4 +1,5 @@
 import random
+import datacenter
 from datacenter.models import Schoolkid
 from datacenter.models import Mark
 from datacenter.models import Chastisement
@@ -7,19 +8,10 @@ from datacenter.models import Commendation
 from datacenter.models import Subject
 
 
-def get_schoolkid_id():
-    input_name = input("Введите свою фамилию: ")
-    schoolkids = Schoolkid.objects.filter(full_name__contains=input_name)
-    if schoolkids:
-        for index, schoolkid in enumerate(schoolkids):
-            print(index + 1, schoolkid.full_name, schoolkid.year_of_study, schoolkid.group_letter)
-        print("Найдите себя в списке учеников и введите свой номер из списка")
-        input_index = input('Введите свой номер: ')
-        schoolkid_id = schoolkids[int(input_index)-1].id
-    else:
-        print("Такого ученика не нашлось в базе,попробуйте еще раз")
-        schoolkid_id = get_schoolkid_id()
-    return schoolkid_id
+def get_schoolkid():
+    input_name = input("Введите свое ФИО полностью: ")
+    schoolkid = Schoolkid.objects.get(full_name__contains=input_name)
+    return schoolkid
 
 
 def get_random_commendation():
@@ -93,10 +85,16 @@ def create_commendation(schoolkid):
 
 
 def start_hack():
-    pupil = Schoolkid.objects.get(id=get_schoolkid_id())
-    fix_marks(pupil)
-    remove_castisement(pupil)
-    create_commendation(pupil)
+    try:
+        pupil = get_schoolkid()
+        fix_marks(pupil)
+        remove_castisement(pupil)
+        create_commendation(pupil)
+        print("Успешно!")
+    except datacenter.models.Schoolkid.DoesNotExist:
+        raise SystemExit("Такого ученика в базе нет")
+    except datacenter.models.Schoolkid.MultipleObjectsReturned:
+        raise SystemExit("В базе найдено несколько учеников с введенными данными")
 
 
 start_hack()
