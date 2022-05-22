@@ -85,10 +85,10 @@ def create_commendation(schoolkid):
 
 def start_hack():
     try:
-        pupil = get_schoolkid()
-        fix_marks(pupil)
-        remove_castisement(pupil)
-        create_commendation(pupil)
+        schoolkid = get_schoolkid()
+        fix_marks(schoolkid)
+        remove_castisement(schoolkid)
+        create_commendation(schoolkid)
         print("Успешно!")
     except Schoolkid.DoesNotExist:
         raise SystemExit("Такого ученика в базе нет")
