@@ -1,5 +1,4 @@
 import random
-import datacenter
 from datacenter.models import Schoolkid
 from datacenter.models import Mark
 from datacenter.models import Chastisement
@@ -91,9 +90,9 @@ def start_hack():
         remove_castisement(pupil)
         create_commendation(pupil)
         print("Успешно!")
-    except datacenter.models.Schoolkid.DoesNotExist:
+    except Schoolkid.DoesNotExist:
         raise SystemExit("Такого ученика в базе нет")
-    except datacenter.models.Schoolkid.MultipleObjectsReturned:
+    except Schoolkid.MultipleObjectsReturned:
         raise SystemExit("В базе найдено несколько учеников с введенными данными")
 
 
