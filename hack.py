@@ -7,9 +7,8 @@ from datacenter.models import Commendation
 from datacenter.models import Subject
 
 
-def get_schoolkid():
-    input_name = input("Введите свое ФИО полностью: ")
-    schoolkid = Schoolkid.objects.get(full_name__contains=input_name)
+def get_schoolkid(schoolkid_name):
+    schoolkid = Schoolkid.objects.get(full_name__contains=schoolkid_name)
     return schoolkid
 
 
@@ -84,16 +83,17 @@ def create_commendation(schoolkid):
 
 
 def start_hack():
+    input_name = input("Введите свое ФИО полностью: ")
     try:
-        schoolkid = get_schoolkid()
-        fix_marks(schoolkid)
-        remove_castisement(schoolkid)
-        create_commendation(schoolkid)
+        schoolkid = get_schoolkid(input_name)
         print("Успешно!")
     except Schoolkid.DoesNotExist:
         raise SystemExit("Такого ученика в базе нет")
     except Schoolkid.MultipleObjectsReturned:
         raise SystemExit("В базе найдено несколько учеников с введенными данными")
+    fix_marks(schoolkid)
+    remove_castisement(schoolkid)
+    create_commendation(schoolkid)
 
 
 start_hack()
